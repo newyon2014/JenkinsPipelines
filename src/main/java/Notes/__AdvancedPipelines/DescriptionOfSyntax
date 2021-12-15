@@ -1,0 +1,110 @@
+Complete Syntax Reference
+pipeline (required) -  contains the entire Pipeline definition
+
+agent (required)- defines the agent used for entire pipeline or a stage
+
+any - use any available agent
+
+none - do not use a node
+
+node -  allocate a specific executor
+
+label - existing Jenkins node label for agent
+
+customWorkspace - use a custom workspace directory on agent
+
+docker - requires docker-enabled node
+
+image - run inside specified docker image
+
+label -  existing Jenkins node label for agent
+
+registryUrl - use a private registry hosting image
+
+registryCredentialsId - id of credentials to connect to registry
+
+reuseNode - (Boolean) reuse the workspace and node allocated previously
+
+args -  arguments for docker container.
+
+customWorkspace - use a custom workspace directory on agent
+
+dockerfile - use a local dockerfile
+
+filename - name of local dockerfile
+
+dir - subdirectory to use
+
+label -  existing Jenkins node label
+
+reuseNode - (Boolean) reuse the workspace and node allocated previously
+
+args -  arguments for docker container
+
+customWorkspace - use a custom workspace directory on agent
+
+stages (required) - contains all stages and steps within Pipeline
+
+stage (required) - specific named  “Stage” of the Pipeline
+
+steps (required) - build steps that define the actions in the stage. Contains one or more of following:
+
+any build step or build wrapper defined in Pipeline. e.g. sh, bat, powershell, timeout, retry, echo, archive, junit, etc.
+
+script  - execute Scripted Pipeline block
+
+when  - executes stage conditionally
+
+branch - stage runs when branch name matches ant pattern
+
+expression - Boolean Groovy expression
+
+anyOf - any of the enclosed conditions are true
+
+allOf - all of the enclosed conditions are true
+
+not - none of the enclosed conditions are true
+
+parallel  -
+
+stage- stages are executed in parallel but
+
+agent, environment, tools and post may also optionally be defined in stage
+
+environment - a sequence of “key = value” pairs to define environment variables
+
+credentials(‘<id>’) (optional) - Bind credentials to variable.
+
+libraries - load shared libraries from an scm
+
+lib - the name of the shared library to load
+
+options - options for entire Pipeline.
+
+skipDefaultCheckout - disable auto checkout scm
+
+timeout - sets timeout for entire Pipeline
+
+buildDiscarder - discard old builds
+
+disableConcurrentBuilds - disable concurrent Pipeline runs
+
+ansiColor - color the log file output
+
+tools - Installs predefined tools to be available on PATH
+
+triggers - triggers to launch Pipeline based on schedule, etc.
+
+parameters - parameters that are prompted for at run time.
+
+post - defines actions to be taken when pipeline or stage completes based on outcome. Conditions execute in order:
+
+always - run regardless of Pipeline status.
+
+changed - run if the result of Pipeline has changed from last run
+
+success - run if Pipeline is successful
+
+unstable - run if Pipeline result is unstable
+
+failure - run if the Pipeline has failed

@@ -1,0 +1,51 @@
+package Notes.__AdvancedPipelines
+
+/*
+In my POM.xml file for my android project I have created six profiles. I run these from the command line
+like mvn clean install -P mdpi. This works fine. Now I am using jenkins for my CI. I want the user to be
+presented with a drop down list of all profiles and then use mvn clean install -P ${selected-profile}
+so the ${selected-profile} variable contains the profile for the build. How can i do this?
+ */
+
+pipeline {
+    agent {
+        label 'common'
+    }
+    tools {
+        maven 'Maven-3.5.4'
+    }
+    stages {
+        stage('Build and Publish') {
+            when {
+                anyOf {
+                    buildingTag();
+                    branch 'master';
+                    branch 'develop';
+                    branch 'release/**';
+                }
+            }
+            steps {
+                script {
+                    def server = Artifactory.server 'test-artifactory'
+                    def rtMaven = Artifactory.newMavenBuild()
+                    def buildInfo
+                    //Set default profile
+                    def mvnProfile = 'dev'
+                    //Set the target mvn profile based on the current branch
+                    if (env.BRANCH_NAME.equals('master')) {
+                        mvnProfile = 'prod'
+                    } else if (env.BRANCH_NAME.startsWith('release/')) {
+                        mvnProfile = 'test'
+                    }
+
+                    rtMaven.tool = "Maven-3.5.4"
+                    // Set Artifactory repositories for dependencies resolution and artifacts deployment.
+                    rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
+
+                    buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -Dmaven.test.skip=true -P' + mvnProfile
+                    server.publishBuildInfo buildInfo
+                }
+            }
+        }
+    }
+}
